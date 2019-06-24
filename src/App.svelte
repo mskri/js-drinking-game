@@ -2,40 +2,49 @@
     import { fade } from "svelte/transition";
     import Logo from "./components/Logo.svelte";
 
-    let isMatch = false;
-    let isNotMatch = false;
-    let inputWord = "";
+    let showResult = false;
+    let isMatch = null;
+    let inputValue = "";
 
-    function startGame() {
-        const inputElement = document.getElementById("input-word");
-        const inputValue = inputElement.value;
-
+    $: showResult = isMatch !== null;
+    $: console.log(showResult);
+    async function startGame() {
         if (inputValue.length < 1) return;
-        inputWord = inputValue;
+        findMatch(inputValue);
+        //document.getElementById("reset-game-button").focus();
+    }
 
-        if (inputValue == "asd") {
-            isMatch = true;
-        } else {
-            isNotMatch = true;
-            // inputElement.style.webkitAnimationPlayState = "running";
-            // setTimeout(() => {
-            //     inputElement.style.webkitAnimationPlayState = "paused";
-            // }, 2000);
-        }
+    function findMatch(packageName) {
+        fetch(`https://api.npms.io/v2/package/${packageName}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.code === "NOT_FOUND") {
+                    isMatch = false;
+                } else {
+                    // console.log(data.collected.links.npm);
+                    isMatch = true;
+                }
+            });
     }
 
     function randomWord() {
-        const inputElement = document.getElementById("input-word");
-        inputElement.value = "monkey";
+        inputValue = "monkey";
     }
 
     function resetGame() {
-        const inputElement = document.getElementById("input-word");
+        isMatch = null;
+        inputValue = "";
+        document.getElementById("input-word").focus();
+    }
 
-        isMatch = false;
-        isNotMatch = false;
-        inputWord = "";
-        inputElement.value = "";
+    function handleKeydown(event) {
+        if (inputValue.length < 1) return;
+
+        // Handle only enter keys
+        if (event.keyCode === 13) {
+            startGame();
+        }
     }
 </script>
 
@@ -45,6 +54,7 @@
         margin: 0 auto;
         padding: 40px 0 0 0;
         width: 60%;
+        min-width: 320px;
         max-width: 800px;
         text-align: center;
     }
@@ -65,7 +75,12 @@
         margin: 8px auto;
     }
 
-    .start-game, .reset-game {
+    button {
+        min-width: 200px;
+    }
+
+    .start-game,
+    .reset-game {
         cursor: pointer;
         margin: 24px 8px 16px;
         padding: 16px;
@@ -92,7 +107,7 @@
         background: transparent;
         border: none;
         border-bottom: 2px solid #0092e0;
-        /* #3ea379; */
+        min-width: 0;
     }
 
     .input-container {
@@ -100,9 +115,17 @@
         width: 80%;
         min-width: 300px;
         margin: 0 auto;
+        height: 100px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
     }
 
-    #input-word {
+    .input-shape {
+        line-height: 3rem;
+        min-height: 72px;
+        max-width: 460px;
+        margin: auto 0;
         text-align: center;
         width: 100%;
         padding: 16px 30px;
@@ -112,45 +135,19 @@
         border-radius: 50px;
         box-shadow: 0 0 2px rgba(0, 0, 0, 0.08);
         background: #fffbe2;
-        animation: invalid-input-blink 0.5s step-end infinite alternate;
-        animation-play-state: paused;
     }
 
-    .result {
-        margin-top: 32px;
+    .match {
         font-size: 2rem;
-    }
-
-    #input-word.match {
         border: 4px solid #ef4f74;
         background: #ffeaef;
-        /* animation: match-blink 0.5s step-end infinite alternate;
-        animation-play-state: paused; */
+        padding: 16px 30px;
     }
 
-    #input-word.no-match {
+    .no-match {
+        font-size: 2rem;
         border: 4px solid #3ea379;
         background: #eafff6;
-        /* animation: invalid-input-blink 0.5s step-end infinite alternate;
-        animation-play-state: paused; */
-    }
-
-    @keyframes match-blink {
-        50% {
-            border-color: #3ea379;
-        }
-    }
-
-    @keyframes invalid-input-blink {
-        50% {
-            border-color: #ef4f74;
-        }
-    }
-
-    footer {
-        margin: 16px auto;
-        flex-shrink: 0;
-        font-size: 1.2rem;
     }
 </style>
 
@@ -158,28 +155,37 @@
     <Logo />
     <h1>JS drinking game!</h1>
     <p>Rules are simple. Search for a word and if you get a match you drink. It's that simple!</p>
-    <h2>My lucky word is</h2>
-    <div class="input-container">
-        <input id="input-word" class:no-match={isNotMatch} class:match={isMatch} placeholder="" type="text" />
-        <!-- {#if isMatch}
-            <button class="reset-word" type="reset">Reset</button>
-        {/if} -->
-    </div>
-    {#if !isMatch && !isNotMatch}
+    {#if !showResult}
+        <h2>Enter your lucky word</h2>
+        <div class="input-container">
+            <input
+                id="input-word"
+                class="input-shape"
+                bind:value={inputValue}
+                class:no-match={showResult && !isMatch}
+                class:match={showResult && isMatch}
+                placeholder=""
+                readonly={showResult}
+                on:keydown={handleKeydown}
+                type="text" />
+        </div>
+    {/if}
+    {#if showResult && isMatch}
+        <h2>Drink up!</h2>
+        <div class="input-container">
+            <div class="input-shape match">There is "{inputValue}" package.</div>
+        </div>
+    {/if}
+    {#if showResult && !isMatch}
+        <h2>You are safe</h2>
+        <div class="input-container">
+            <div class="input-shape no-match">There is no "{inputValue}" package.</div>
+        </div>
+    {/if}
+    {#if !showResult}
         <button class="start-game" on:click={() => startGame()}>Play!</button>
         <button class="random-word" on:click={() => randomWord()}>Choose a word for me</button>
     {:else}
-        <button class="reset-game" on:click={() => resetGame()}>Start a new game!</button>
-    {/if}
-     {#if isMatch}
-        <div transition:fade={{ duration: 200 }} class="result">Drink up! There is exact match for "{inputWord}".</div>
-    {/if}
-    {#if isNotMatch}
-        <div transition:fade={{ duration: 200 }} class="result">You are safe. There is no match for "{inputWord}".</div>
+        <button id="reset-game-button" class="reset-game" on:click={() => resetGame()}>Start a new game!</button>
     {/if}
 </main>
-
-<footer>
-    <p>Drink responsibly!</p>
-
-</footer>
