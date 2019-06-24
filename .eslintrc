@@ -1,0 +1,13 @@
+{
+  "plugins": ["prettier", "svelte3"],
+  "extends": ["prettier"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "ecmaVersion": 6,
+      "modules": true
+    }
+  },
+  "rules": {
+    "prettier/prettier": "error"
+  }
+}

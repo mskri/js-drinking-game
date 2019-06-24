@@ -1,32 +1,55 @@
 {
-  "name": "svelte-app",
-  "version": "1.0.0",
-  "devDependencies": {
-    "autoprefixer": "^9.6.0",
-    "npm-run-all": "^4.1.5",
-    "postcss": "^7.0.17",
-    "postcss-custom-media": "^7.0.8",
-    "postcss-hexrgba": "^1.0.1",
-    "rollup": "^1.10.1",
-    "rollup-plugin-commonjs": "^9.3.4",
-    "rollup-plugin-copy": "^3.0.0",
-    "rollup-plugin-livereload": "^1.0.0",
-    "rollup-plugin-node-resolve": "^4.2.3",
-    "rollup-plugin-postcss": "^2.0.3",
-    "rollup-plugin-svelte": "^5.0.3",
-    "rollup-plugin-svg": "^1.0.1",
-    "rollup-plugin-terser": "^4.0.4",
-    "svelte": "^3.0.0",
-    "svelte-preprocess-postcss": "^1.1.0"
-  },
-  "dependencies": {
-    "sirv-cli": "^0.4.4"
-  },
-  "scripts": {
-    "build": "rollup -c",
-    "autobuild": "rollup -c -w",
-    "dev": "run-p start:dev autobuild",
-    "start": "sirv public --single",
-    "start:dev": "sirv public --single --dev"
-  }
+    "name": "js-drinking-game",
+    "version": "0.1.0",
+    "description": "JS drinking game. Search for a word and if you get a match you drink.",
+    "author": "Sakari Mursu <sakari@mursu.dev>",
+    "license": "MIT",
+    "devDependencies": {
+        "autoprefixer": "^9.6.0",
+        "eslint": "^6.0.0",
+        "eslint-config-prettier": "^5.0.0",
+        "eslint-plugin-prettier": "^3.1.0",
+        "eslint-plugin-svelte3": "^2.0.0",
+        "husky": "^2.4.1",
+        "npm-run-all": "^4.1.5",
+        "postcss": "^7.0.17",
+        "postcss-custom-media": "^7.0.8",
+        "postcss-hexrgba": "^1.0.1",
+        "prettier": "^1.18.2",
+        "prettier-plugin-svelte": "^0.6.0",
+        "pretty-quick": "^1.11.1",
+        "rollup": "^1.10.1",
+        "rollup-plugin-commonjs": "^9.3.4",
+        "rollup-plugin-copy": "^3.0.0",
+        "rollup-plugin-livereload": "^1.0.0",
+        "rollup-plugin-node-resolve": "^4.2.3",
+        "rollup-plugin-postcss": "^2.0.3",
+        "rollup-plugin-svelte": "^5.0.3",
+        "rollup-plugin-svg": "^1.0.1",
+        "rollup-plugin-terser": "^4.0.4",
+        "svelte": "^3.0.0",
+        "svelte-preprocess-postcss": "^1.1.0"
+    },
+    "dependencies": {
+        "sirv-cli": "^0.4.4"
+    },
+    "scripts": {
+        "build": "rollup -c",
+        "autobuild": "rollup -c -w",
+        "dev": "run-p start:dev autobuild",
+        "start": "sirv public --single",
+        "start:dev": "sirv public --single --dev"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "pretty-quick --staged"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mskri/js-drinking-game"
+    },
+    "bugs": {
+        "url": "hhttps://github.com/mskri/js-drinking-game/issues"
+    }
 }
