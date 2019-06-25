@@ -153,7 +153,10 @@
 <main id="app">
     <Logo />
     <h1>JS drinking game!</h1>
-    <p>Rules are simple. Search for a word and if you get a match you drink. It's that simple!</p>
+    <p>
+        Rules are simple. Search for a word and if there is a NPM package with the same name you drink. It's that
+        simple!
+    </p>
     {#if !showResult}
         <h2>Enter your lucky word</h2>
         <div class="input-container">

@@ -1,6 +1,6 @@
 # JS drinking game!
 
-Rules are simple. Search for a word and if you get a match you drink. It's that simple!
+Rules are simple. Search for a word and if there is a NPM package with the same name you drink. It's that simple!
 
 ## Start developing
 
