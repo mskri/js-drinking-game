@@ -7,22 +7,21 @@
     let inputValue = "";
 
     $: showResult = isMatch !== null;
-    $: console.log(showResult);
-    async function startGame() {
+
+    function startGame() {
         if (inputValue.length < 1) return;
+
         findMatch(inputValue);
-        //document.getElementById("reset-game-button").focus();
     }
 
     function findMatch(packageName) {
         fetch(`https://api.npms.io/v2/package/${packageName}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 if (data.code === "NOT_FOUND") {
                     isMatch = false;
                 } else {
-                    // console.log(data.collected.links.npm);
+                    // console.log(data.collected.metadata.links.npm);
                     isMatch = true;
                 }
             });
